@@ -6,43 +6,54 @@ set -e
 
 only_scripts() {
 	while IFS= read -r file; do
-		firstline=$(head -n 1 "$file")
-		if [[ "$firstline" =~ '#!/bin/'(ba)?sh ]] || [[ "$file" =~ .sh$ ]]; then
-			echo "$file"
+		if [[ -f "$file" ]]; then
+			firstline=$(head -n 1 "$file")
+			if [[ "$firstline" =~ '#!/bin/'(ba)?sh ]] || [[ "$file" =~ .sh$ ]]; then
+				echo "$file"
+			fi
 		fi
 	done
 }
 
-if [ "$GIT_PRE_COMMIT_HOOK" = true ]; then
+for dep in shfmt shellcheck; do
+	if ! command -v "$dep" >/dev/null; then
+		echo "ERROR: Hook dependency $dep not found in \$PATH" >&2
+		exit 1
+	fi
+done
+
+if [[ -n "$GIT_HOOK" ]]; then
 	# If we are running as a pre-commit hook, only check the staged files
 	# If grep has no results, this will fail. Disable -e temporarily.
 	set +e
-	STAGED_FILES="$(git diff --name-only --cached | only_scripts)"
+	staged_files="$(git diff --name-only --cached | only_scripts)"
 	set -e
 else
 	# Otherwise, check all shell files
-	STAGED_FILES="$("$GOPATH/bin/shfmt" -f .)"
+	staged_files="$(shfmt -f .)"
 fi
 
-if [ -z "$STAGED_FILES" ]; then
+if [[ -z "$staged_files" ]]; then
 	echo 'No files to check.'
 	exit 0
 fi
 
+echo "$staged_files"
+
 # Prettify first in case it affects linting
 echo 'Prettifying...'
-for file in $STAGED_FILES; do
+for file in $staged_files; do
 	# Use shfmt to prettify
-	"$GOPATH/bin/shfmt" -l -w -i 0 "$file"
+	"shfmt" -l -w -i 0 "$file"
 	# Add the fixed files back the the staging area
 	# This only happens within the precommit hook, which uses git stash beforehand!
-	if [ "$GIT_PRE_COMMIT_HOOK" = 'true' ]; then
+	if [[ -n "$GIT_HOOK" ]]; then
 		git add "$file"
 	fi
 done
 
 # Now lint using shellcheck
 echo 'Linting...'
-for file in $STAGED_FILES; do
+for file in $staged_files; do
 	shellcheck "$file"
 done
