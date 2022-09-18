@@ -2,8 +2,6 @@
 
 hook_name="$(basename "$0")"
 
-echo $hook_name
-
 # Run tests as hook
 for script in "$0".d/*; do
 	# Don't run disabled tests
