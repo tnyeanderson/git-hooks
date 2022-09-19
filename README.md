@@ -1,8 +1,8 @@
-# Git hooks
+# githooks
 
 This repo contains hooks that can be set up in other git repos.
 
-## Setup
+## Add hooks to an existing repo
 
 While in the root of the repo that needs hooks, add this repo as a submodule:
 ```bash
@@ -14,11 +14,11 @@ Then set up the hooks:
 ./githooks/setup
 ```
 
-> IMPORTANT: A note should be added to contributors in the README to run the
-above setup before committing to the repo! There is no way to *automatically*
-set up git hooks for anyone who pulls and commits to a repo. This is done for
-security reasons (hooks execute arbitrary scripts as a side effect during
-normal `git` operations).
+> IMPORTANT: A note should be added to contributors in the README to run
+`./githooks/setup` before committing to the repo! There is no way to
+*automatically* set up git hooks for anyone who pulls and commits to a repo.
+This is done for security reasons (hooks execute arbitrary scripts as a side
+effect during normal `git` operations).
 
 By default, each hook file (`pre-commit`, etc) runs each test script in its
 corresponding directory (for example: `pre-commit.d`) in order. If a file
