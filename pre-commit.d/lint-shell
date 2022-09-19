@@ -42,7 +42,7 @@ fi
 echo 'Prettifying...'
 for file in $staged_files; do
 	# Use shfmt to prettify
-	"shfmt" -l -w -i 0 "$file"
+	shfmt -l -w -i 0 "$file"
 	# Add the fixed files back the the staging area
 	# This only happens within the precommit hook, which uses git stash beforehand!
 	if [[ -n "$GIT_HOOK" ]]; then
