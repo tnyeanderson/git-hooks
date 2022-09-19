@@ -33,5 +33,5 @@ the type of hook that is running (for example: `GIT_HOOK=pre-commit`)
 
 The hooks need to be run for this repo too! Run this before committing:
 ```bash
-git config core.hooksPath .
+git config core.hooksPath hooks
 ```
