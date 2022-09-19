@@ -28,3 +28,10 @@ called `active-hooks` is present at the root of the hooks directory
 
 Each test script runs with the environment variable `GIT_HOOK` set to
 the type of hook that is running (for example: `GIT_HOOK=pre-commit`)
+
+## Contributing to this repo
+
+The hooks need to be run for this repo too! Run this before committing:
+```bash
+git config core.hooksPath .
+```
