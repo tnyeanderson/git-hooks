@@ -1,0 +1,13 @@
+# Add the relative path to each hook that should run
+# Do NOT enter leading dot slash (./)
+#
+# Only lines that begin with the name of the hook that
+# is currently running followed by ".d/" are considered
+# valid for that hook
+#
+# For example, if the pre-commit hook is running, only
+# the lines in this file that start with "pre-commit.d/"
+# will be considered.
+
+# Only run the shell-lint pre-commit hook
+pre-commit.d/lint-shell

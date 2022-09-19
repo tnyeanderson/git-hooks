@@ -9,21 +9,22 @@ While in the root of the repo that needs hooks, add this repo as a submodule:
 git submodule add https://github.com/tnyeanderson/githooks.git .githooks
 ```
 
-By default, each hook file (`pre-commit`, etc) runs each test script in its
-corresponding directory (for example: `pre-commit.d`) in order, as long as the
-file name does not end with `.disabled`.
-
-> NOTE: Each test script runs with the environment variable `GIT_HOOK` set to
-the type of hook that is running (for example: `GIT_HOOK=pre-commit`)
-
-To disable a test script for a project:
+Then set up the hooks:
 ```bash
-mv pre-commit.d/lint-shell pre-commit.d/lint-shell.disabled
+./githooks/setup
 ```
 
-There is no way to *automatically* set up git hooks for anyone who pulls and
-commits to a repo. This is done for security reasons (hooks execute arbitrary
-scripts as a side effect during normal `git` operations).
+> IMPORTANT: A note should be added to contributors in the README to run the
+above setup before committing to the repo! There is no way to *automatically*
+set up git hooks for anyone who pulls and commits to a repo. This is done for
+security reasons (hooks execute arbitrary scripts as a side effect during
+normal `git` operations).
 
-Then, in the project README, tell the user to run `.githooks/setup` before
-contributing.
+By default, each hook file (`pre-commit`, etc) runs each test script in its
+corresponding directory (for example: `pre-commit.d`) in order. If a file
+called `active-hooks` is present at the root of the hooks directory
+(`.githooks`), then only the hooks defined in that file will be run. See
+`active-hooks.example` for more information.
+
+Each test script runs with the environment variable `GIT_HOOK` set to
+the type of hook that is running (for example: `GIT_HOOK=pre-commit`)

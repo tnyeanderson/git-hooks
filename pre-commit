@@ -1,6 +1,26 @@
 #!/bin/bash
 
 hook_name="$(basename "$0")"
+hooks_dir="$(git config core.hooksPath)"
+
+run_hook() {
+	local script=$1
+	if [[ -x "$script" ]]; then
+		GIT_HOOK=$hook_name "$script" || exit 1
+	fi
+}
+
+# If the active-hooks file is present, only run those hooks
+if [[ -f active-hooks ]]; then
+	while IFS= read -r hook; do
+		# Only consider the line (hook) if it begins with "${hook_name}.d/"
+		# This prevents improper or unrelated hooks from being run
+		# Conveniently, this ignores things like blank lines and comments
+		if [[ "$hook" =~ ^"${hook_name}.d/" ]]; then
+			run_hook "$hooks_dir/$hook"
+		fi
+	done <active-hooks
+fi
 
 # Run tests as hook
 for script in "$0".d/*; do
