@@ -11,11 +11,11 @@ git submodule add https://github.com/tnyeanderson/githooks.git .githooks
 
 Then set up the hooks:
 ```bash
-./githooks/setup
+.githooks/setup
 ```
 
 > IMPORTANT: A note should be added to contributors in the README to run
-`./githooks/setup` before committing to the repo! There is no way to
+`.githooks/setup` before committing to the repo! There is no way to
 *automatically* set up git hooks for anyone who pulls and commits to a repo.
 This is done for security reasons (hooks execute arbitrary scripts as a side
 effect during normal `git` operations).
